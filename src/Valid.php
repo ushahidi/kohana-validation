@@ -248,7 +248,7 @@ class Valid {
 	 * @return  boolean
 	 * @uses    Valid::luhn
 	 */
-	public static function credit_card($number, $type = NULL)
+	/*public static function credit_card($number, $type = NULL)
 	{
 		// Remove all non-digit characters from the number
 		if (($number = preg_replace('/\D+/', '', $number)) === '')
@@ -295,7 +295,7 @@ class Valid {
 			return TRUE;
 
 		return Valid::luhn($number);
-	}
+	}*/
 
 	/**
 	 * Validate a number against the [Luhn](http://en.wikipedia.org/wiki/Luhn_algorithm)
