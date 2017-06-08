@@ -52,7 +52,7 @@ class Valid {
 	 */
 	public static function min_length($value, $length)
 	{
-		return UTF8::strlen($value) >= $length;
+		return mb_strlen($value, 'utf-8') >= $length;
 	}
 
 	/**
@@ -64,7 +64,7 @@ class Valid {
 	 */
 	public static function max_length($value, $length)
 	{
-		return UTF8::strlen($value) <= $length;
+		return mb_strlen($value, 'utf-8') <= $length;
 	}
 
 	/**
@@ -80,13 +80,13 @@ class Valid {
 		{
 			foreach ($length as $strlen)
 			{
-				if (UTF8::strlen($value) === $strlen)
+				if (mb_strlen($value, 'utf-8') === $strlen)
 					return TRUE;
 			}
 			return FALSE;
 		}
 
-		return UTF8::strlen($value) === $length;
+		return mb_strlen($value, 'utf-8') === $length;
 	}
 
 	/**
@@ -113,7 +113,7 @@ class Valid {
 	 */
 	public static function email($email, $strict = FALSE)
 	{
-		if (UTF8::strlen($email) > 254)
+		if (mb_strlen($email, 'utf-8') > 254)
 		{
 			return FALSE;
 		}
