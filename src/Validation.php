@@ -621,7 +621,8 @@ class Validation implements \ArrayAccess {
 	{
 		// If we have a callback, just use that
 		if (is_callable($this->_messages)) {
-			return $this->_message($file, $field, $error);
+			$getMessage = $this->_messages;
+			return $getMessage($file, $field, $error);
 		}
 
 		// Otherwise use messages as an array
