@@ -11,7 +11,7 @@ namespace Kohana\Validation;
  * @copyright  (c) 2008-2012 Kohana Team
  * @license    http://kohanaframework.org/license
  */
-class Validation implements ArrayAccess {
+class Validation implements \ArrayAccess {
 
 	/**
 	 * Creates a new Validation instance.
@@ -42,6 +42,9 @@ class Validation implements ArrayAccess {
 	// Array to validate
 	protected $_data = array();
 
+	// Error messages
+	protected $_messages = array();
+
 	/**
 	 * Sets the unique "any field" key and creates an ArrayObject from the
 	 * passed array.
@@ -49,9 +52,10 @@ class Validation implements ArrayAccess {
 	 * @param   array   $array  array to validate
 	 * @return  void
 	 */
-	public function __construct(array $array)
+	public function __construct(array $array, $messages)
 	{
 		$this->_data = $array;
+		$this->_messages = $messages;
 	}
 
 	/**
@@ -65,7 +69,7 @@ class Validation implements ArrayAccess {
 	 */
 	public function offsetSet($offset, $value)
 	{
-		throw new Kohana_Exception('Validation objects are read-only.');
+		throw new Exception('Validation objects are read-only.');
 	}
 
 	/**
@@ -90,7 +94,7 @@ class Validation implements ArrayAccess {
 	 */
 	public function offsetUnset($offset)
 	{
-		throw new Kohana_Exception('Validation objects are read-only.');
+		throw new Exception('Validation objects are read-only.');
 	}
 
 	/**
@@ -289,12 +293,6 @@ class Validation implements ArrayAccess {
 	 */
 	public function check()
 	{
-		if (Kohana::$profiling === TRUE)
-		{
-			// Start a new benchmark
-			$benchmark = Profiler::start('Validation', __FUNCTION__);
-		}
-
 		// New data set
 		$data = $this->_errors = array();
 
@@ -571,19 +569,19 @@ class Validation implements ArrayAccess {
 				}
 			}
 
-			if ($message = Kohana::message($file, "{$field}.{$error}") AND is_string($message))
+			if ($message = $this->getMessage($file, $field, $error) AND is_string($message))
 			{
 				// Found a message for this field and error
 			}
-			elseif ($message = Kohana::message($file, "{$field}.default") AND is_string($message))
+			elseif ($message = $this->getMessage($file, $field, "default") AND is_string($message))
 			{
 				// Found a default message for this field
 			}
-			elseif ($message = Kohana::message($file, $error) AND is_string($message))
+			elseif ($message = $this->getMessage($file, $error) AND is_string($message))
 			{
 				// Found a default message for this error
 			}
-			elseif ($message = Kohana::message('validation', $error) AND is_string($message))
+			elseif ($message = $this->getMessage('validation', $error) AND is_string($message))
 			{
 				// Found a default message for this error
 			}
@@ -617,6 +615,23 @@ class Validation implements ArrayAccess {
 		}
 
 		return $messages;
+	}
+
+	protected function getMessage($file, $field, $error = NULL)
+	{
+		// If we have a callback, just use that
+		if (is_callable($this->_messages)) {
+			return $this->_message($file, $field, $error);
+		}
+
+		// Otherwise use messages as an array
+		if ($error && !empty($this->_messages[$file][$field][$error])) {
+			return $this->_messages[$file][$field][$error];
+		} if (!empty($this->_messages[$file][$field])) {
+			return $this->_messages[$file][$field];
+		} else {
+			return false;
+		}
 	}
 
 }
