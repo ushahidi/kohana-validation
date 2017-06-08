@@ -386,7 +386,7 @@ class Validation implements \ArrayAccess {
 				elseif (method_exists(Valid::class, $rule))
 				{
 					// Use a method in this object
-					$method = new ReflectionMethod(Valid::class, $rule);
+					$method = new \ReflectionMethod(Valid::class, $rule);
 
 					// Call static::$rule($this[$field], $param, ...) with Reflection
 					$passed = $method->invokeArgs(NULL, $params);
@@ -394,7 +394,7 @@ class Validation implements \ArrayAccess {
 				elseif (strpos($rule, '::') === FALSE)
 				{
 					// Use a function call
-					$function = new ReflectionFunction($rule);
+					$function = new \ReflectionFunction($rule);
 
 					// Call $function($this[$field], $param, ...) with Reflection
 					$passed = $function->invokeArgs($params);
@@ -405,7 +405,7 @@ class Validation implements \ArrayAccess {
 					list($class, $method) = explode('::', $rule, 2);
 
 					// Use a static method call
-					$method = new ReflectionMethod($class, $method);
+					$method = new \ReflectionMethod($class, $method);
 
 					// Call $Class::$method($this[$field], $param, ...) with Reflection
 					$passed = $method->invokeArgs(NULL, $params);
