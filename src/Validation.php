@@ -502,20 +502,6 @@ class Validation implements \ArrayAccess {
 			// Get the label for this field
 			$label = $this->_labels[$field];
 
-			if ($translate)
-			{
-				if (is_string($translate))
-				{
-					// Translate the label using the specified language
-					$label = __($label, NULL, $translate);
-				}
-				else
-				{
-					// Translate the label
-					$label = __($label);
-				}
-			}
-
 			// Start the translation values list
 			$values = array(
 				':field' => $label,
@@ -548,20 +534,6 @@ class Validation implements \ArrayAccess {
 					{
 						// Use the label as the value, eg: related field name for "matches"
 						$value = $this->_labels[$value];
-
-						if ($translate)
-						{
-							if (is_string($translate))
-							{
-								// Translate the value using the specified language
-								$value = __($value, NULL, $translate);
-							}
-							else
-							{
-								// Translate the value
-								$value = __($value);
-							}
-						}
 					}
 
 					// Add each parameter as a numbered value, starting from 1
@@ -591,24 +563,8 @@ class Validation implements \ArrayAccess {
 				$message = "{$file}.{$field}.{$error}";
 			}
 
-			if ($translate)
-			{
-				if (is_string($translate))
-				{
-					// Translate the message using specified language
-					$message = __($message, $values, $translate);
-				}
-				else
-				{
-					// Translate the message using the default language
-					$message = __($message, $values);
-				}
-			}
-			else
-			{
-				// Do not translate, just replace the values
-				$message = strtr($message, $values);
-			}
+			// Do not translate, just replace the values
+			$message = strtr($message, $values);
 
 			// Set the message for this field
 			$messages[$field] = $message;
